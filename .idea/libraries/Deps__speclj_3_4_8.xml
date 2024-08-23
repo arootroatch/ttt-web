@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Deps: speclj:3.4.8">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/speclj/speclj/3.4.8/speclj-3.4.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

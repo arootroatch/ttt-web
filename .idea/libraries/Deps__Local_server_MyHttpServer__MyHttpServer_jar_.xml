@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Deps: Local server/MyHttpServer (MyHttpServer.jar)">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../MyHttpServer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
