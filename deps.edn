@@ -1,5 +1,5 @@
 {:deps    {
-           io.github.arootroatch/tic-tac-toe-clojure {:git/sha "79c85dc2872d92a32c3109adc5a86ab660d27d79"}
+           io.github.arootroatch/tic-tac-toe-clojure {:git/sha "5fe836f058a839a5607c702c3e2b226df73a4c45"}
            server/MyHttpServer                       {:local/root "/Users/AlexRoot-Roatch/current-projects/MyHttpServer.jar"}
            hiccup/hiccup                             {:mvn/version "2.0.0-RC3"}
            com.github.seancorfield/next.jdbc         {:mvn/version "1.3.939"}

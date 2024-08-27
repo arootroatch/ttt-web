@@ -1,10 +1,12 @@
 (ns html-spec.db-selection-spec
   (:require [clojure.test :refer :all]
             [speclj.core :refer :all]
+            [tic-tac-toe.game-logs.game-logs :as game-logs]
             [ttt-spec :as ttt-spec]
             [ttt :as ttt]))
 
 (describe "db-selection"
+  (with-stubs)
   (before (.reset ttt-spec/out))
 
   (it "asks for db preference"
@@ -27,4 +29,17 @@
   (it "sets edn-db selection to cookie"
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/edn-post) ttt-spec/out)
     (should-contain (str "Set-Cookie: state=" (assoc ttt/initial-state :db :edn :current-screen :mode-selection) "\n\n")
-                    (str ttt-spec/out))))
+                    (str ttt-spec/out)))
+
+  (it "sets screen to resume if there's an in-progress game"
+    (with-redefs [game-logs/get-last-in-progress-game
+                  (stub :last {:return {:game-id 8}})]
+      (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/sql-post) ttt-spec/out)
+      (should-contain ":current-screen :resume-selection" (str ttt-spec/out))
+      (should-have-invoked :last)))
+
+  (it "sets screen to mode-selection if no in-progress game"
+    (with-redefs [game-logs/get-last-in-progress-game
+                  (stub :last {:return nil})]
+      (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/sql-post) ttt-spec/out)
+      (should-contain ":current-screen :mode-selection" (str ttt-spec/out)))))
