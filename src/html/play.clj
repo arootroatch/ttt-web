@@ -20,8 +20,12 @@
     (when (not (number? value))
       (if (= :o value) "O" "X"))))
 
-(defn render-button [n board]
-  [:button {:type "submit" :name "move" :value n :style button-styles} (set-label board n)])
+(defn- set-button-state [game-state replay?]
+  (or replay? (not= :in-progress game-state)))
+
+(defn render-button [n board game-state replay?]
+  [:button {:type "submit" :name "move" :value n :style button-styles :disabled (set-button-state game-state replay?)}
+   (set-label board n)])
 
 (defmulti render-board (fn [state] (count (:board state))))
 
@@ -31,9 +35,9 @@
                  [:h1 "Tic-Tac-Toe"]
                  [:p (play/play-heading player game-state human?)]
                  [:form {:method "POST" :action "/ttt"}
-                  [:div {:style button-container-styles} (map #(render-button % board) [0 1 2])]
-                  [:div {:style button-container-styles} (map #(render-button % board) [3 4 5])]
-                  [:div {:style button-container-styles} (map #(render-button % board) [6 7 8])]
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [0 1 2])]
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [3 4 5])]
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [6 7 8])]
                   (when replay? [:button {:type "submit" :name "next-move" :value 0} "Next Move"])]]])))
 
 (defmethod render-board 16 [{:keys [board player game-state human? replay?]}]
@@ -42,11 +46,11 @@
                  [:h1 "Tic-Tac-Toe"]
                  [:p (play/play-heading player game-state human?)]
                  [:form {:method "POST" :action "/ttt"}
-                  [:div {:style button-container-styles} (map #(render-button % board) [0 1 2 3])]
-                  [:div {:style button-container-styles} (map #(render-button % board) [4 5 6 7])]
-                  [:div {:style button-container-styles} (map #(render-button % board) [8 9 10 11])]
-                  [:div {:style button-container-styles} (map #(render-button % board) [12 13 14 15])]
-                  (when replay? [:button {:type "submit" :name "next-move"} "Next Move"])]]])))
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [0 1 2 3])]
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [4 5 6 7])]
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [8 9 10 11])]
+                  [:div {:style button-container-styles} (map #(render-button % board game-state replay?) [12 13 14 15])]
+                  (when replay? [:button {:type "submit" :name "next-move" :value 0} "Next Move"])]]])))
 
 (defmethod render-html :play [state]
     (render-board state))

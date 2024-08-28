@@ -141,6 +141,12 @@
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" request-with-terminal-state) ttt-spec/out)
     (should-have-invoked :log-completed))
 
+  (it "post request for move disables buttons when game over"
+    (.serve ttt-spec/route (assoc ttt-spec/connData "request" request-with-terminal-state) ttt-spec/out)
+    (should-contain (str "<button disabled=\"disabled\" name=\"move\" style=\"" button-styles
+                         "\" type=\"submit\" value=\"1\">X</button>")
+                    (str ttt-spec/out)))
+
   (it "post request for move logs move to db"
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" request-with-terminal-state) ttt-spec/out)
     (should-have-invoked :log-move [{:with {:ds sql/ds :state (assoc state-with-moves

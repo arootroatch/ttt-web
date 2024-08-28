@@ -3,6 +3,7 @@
             [tic-tac-toe.game-logs.game-logs :as game-logs]
             [tic-tac-toe.game-logs.sql :as sql]
             [tic-tac-toe.game_logs.edn-logs :as edn]
+            [html.play :as play]
             [ttt :refer :all]))
 
 (def replay-state-3x3 {:game-id         2,
@@ -66,6 +67,11 @@
   (it "sets current screen to replay if received replay selection"
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" replay-post-sql) ttt-spec/out)
     (should-contain ":current-screen :replay" (str ttt-spec/out)))
+
+  (it "disables buttons on replay screen"
+    (.serve ttt-spec/route (assoc ttt-spec/connData "request" replay-post-sql) ttt-spec/out)
+    (should-contain (str "<button disabled=\"disabled\" name=\"move\" style=\"" play/button-styles
+                         "\" type=\"submit\" value=\"1\"></button>") (str ttt-spec/out)))
 
   (it "sets game state to in-progress"
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" replay-post-sql) ttt-spec/out)

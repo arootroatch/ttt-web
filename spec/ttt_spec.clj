@@ -42,7 +42,7 @@
 (def level-post-mode-3 (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
                             (assoc level-state :mode 3) "\r\n\r\nfirst-ai-level=2"))
 (def second-level-post (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
-                            (assoc level-state :mode 4 :first-ai-level 2) "\r\n\r\nsecond-ai-level=2"))
+                            (assoc level-state :mode 4 :first-ai-level 2 :human? false) "\r\n\r\nsecond-ai-level=2"))
 (def second-level-post-edn (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
                             (assoc level-state :mode 4 :first-ai-level 2 :db :edn) "\r\n\r\nsecond-ai-level=2"))
 (def level-post (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
@@ -52,7 +52,7 @@
 (def level-post-edn-mode-3 (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
                      (assoc level-state :db :edn :mode 3) "\r\n\r\nfirst-ai-level=2"))
 
-(describe "main"
+(describe "response"
   (with-stubs)
   (before (.reset out))
 

@@ -43,7 +43,7 @@
   (it "adds new edn temp filepath to state"
        (with-redefs [edn/create-new-filepath (stub :create-filepath {:return "test-path"})]
          (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/edn-post) ttt-spec/out)
-         (should-have-invoked :create-filepath {:with [ttt/edn-in-progress-dir 23]})
+         (should-have-invoked :create-filepath {:with [helpers/edn-in-progress-dir 23]})
          (should-contain ":filepath \"test-path\"" (str ttt-spec/out))))
 
   (it "sets screen to resume if there's an in-progress game"
