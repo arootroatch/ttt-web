@@ -26,8 +26,10 @@
 (def board-state (assoc mode-state :current-screen :board-selection :mode 2 :human? true))
 (def board-post-1 (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state=" board-state "\r\n\r\nboard=1"))
 (def board-post-2 (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state=" board-state "\r\n\r\nboard=2"))
-(def board-post-2-mode-1 (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state="
-                              (assoc board-state :mode 1) "\r\n\r\nboard=2"))
+(def board-post-2-mode-1-sql (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state="
+                                  (assoc board-state :mode 1) "\r\n\r\nboard=2"))
+(def board-post-2-mode-1-edn (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state="
+                                  (assoc board-state :mode 1 :db :edn) "\r\n\r\nboard=2"))
 (def board-post-1-mode-1 (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state="
                               (assoc board-state :mode 1) "\r\n\r\nboard=1"))
 (def board-post-mode-4 (str "POST /ttt HTTP/1.1\r\nContent-Length: 7\r\nCookie: state="
@@ -37,20 +39,22 @@
 (def level-state (assoc board-state :board selection/initial-3x3-board :current-screen :level-selection))
 (def level-post-mode-4 (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
                             (assoc level-state :mode 4) "\r\n\r\nfirst-ai-level=2"))
+(def level-post-mode-3 (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
+                            (assoc level-state :mode 3) "\r\n\r\nfirst-ai-level=2"))
 (def second-level-post (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
                             (assoc level-state :mode 4 :first-ai-level 2) "\r\n\r\nsecond-ai-level=2"))
+(def second-level-post-edn (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
+                            (assoc level-state :mode 4 :first-ai-level 2 :db :edn) "\r\n\r\nsecond-ai-level=2"))
 (def level-post (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
                      level-state "\r\n\r\nfirst-ai-level=2"))
+(def level-post-edn (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
+                     (assoc level-state :db :edn) "\r\n\r\nfirst-ai-level=2"))
+(def level-post-edn-mode-3 (str "POST /ttt HTTP/1.1\r\nContent-Length: 16\r\nCookie: state="
+                     (assoc level-state :db :edn :mode 3) "\r\n\r\nfirst-ai-level=2"))
 
-(describe "tests"
+(describe "main"
   (with-stubs)
   (before (.reset out))
-
-  #_(it ""
-      (let [my-map (HashMap.)]
-        (.put my-map "blah1" "blah2")
-        (let [{:strs [blah1]} my-map]
-          (prn "blah1:" blah1))))
 
   (it "sets response headers"
     (.serve route connData out)

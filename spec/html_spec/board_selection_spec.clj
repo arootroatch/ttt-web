@@ -1,12 +1,17 @@
 (ns html-spec.board-selection-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.game-logs.game-logs :as game-logs]
+            [tic-tac-toe.game-logs.sql :as sql]
+            [tic-tac-toe.game_logs.edn-logs :as edn]
             [tic-tac-toe.tui.get-selection :as selection]
             [ttt-spec :as ttt-spec]))
 
 (describe "board-selection"
   (with-stubs)
-  (redefs-around [game-logs/get-new-game-id (stub :game-id {:return 23})])
+  (redefs-around [game-logs/get-new-game-id (stub :game-id {:return 23})
+                  edn/create-in-progress-game-file (stub :create-file)
+                  edn/log-game-id (stub :log-id)
+                  sql/log-game-state (stub :log-game)])
   (before (.reset ttt-spec/out))
 
   (it "asks for board selection after receiving mode selection"
@@ -32,8 +37,19 @@
                     (str ttt-spec/out)))
 
   (it "set screen to play if mode is 1 (HvH)"
-    (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/board-post-2-mode-1) ttt-spec/out)
+    (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/board-post-2-mode-1-sql) ttt-spec/out)
     (should-contain ":current-screen :play" (str ttt-spec/out)))
 
+  (it "logs game state if mode is 1 (HvH) - sql"
+      (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/board-post-2-mode-1-sql) ttt-spec/out)
+      (should-contain ":game-id 23" (str ttt-spec/out))
+      (should-contain ":current-screen :play" (str ttt-spec/out))
+      (should-have-invoked :log-game))
 
+  (it "logs game state if mode is 1 (HvH) - edn"
+      (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/board-post-2-mode-1-edn) ttt-spec/out)
+      (should-contain ":game-id 23" (str ttt-spec/out))
+      (should-contain ":current-screen :play" (str ttt-spec/out))
+      (should-have-invoked :log-id)
+      (should-have-invoked :create-file))
   )

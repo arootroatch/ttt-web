@@ -33,14 +33,14 @@
 
 (describe "resume-selection"
   (with-stubs)
+  (redefs-around [game-logs/get-new-game-id (stub :game-id {:return 23})
+                  game-logs/log-move (stub :log-move)])
   (before (.reset ttt-spec/out))
 
   (it "asks if user wants to resume previous game if in-progress"
     (with-redefs [game-logs/get-last-in-progress-game
-                  (stub :last {:return {:game-id 8}})]
+                  (stub :last {:return {:games/id 8 :games/board (str (range 9))}})]
       (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/sql-post) ttt-spec/out)
-      (should-contain (str "Set-Cookie: state=" ttt-spec/resume-state "\n\n")
-                      (str ttt-spec/out))
       (should-contain "<p>There&apos;s an unfinished game! Would you like resume?</p>" (str ttt-spec/out))
       (should-contain "<form action=\"/ttt\" method=\"POST\">" (str ttt-spec/out))
       (should-contain
@@ -57,9 +57,16 @@
       (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/resume-post-1) ttt-spec/out)
       (should-contain ":current-screen :play" (str ttt-spec/out))))
 
+  (it "triggers ai move if resumed on ai turn"
+    (with-redefs [game-logs/get-last-in-progress-game (stub :last {:return in-progress})
+                  resume/handle-resume (stub :handle-resume {:return sql-tui-resume-state})]
+      (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/resume-post-1) ttt-spec/out)
+      (should-contain ":board [:o 2 3 4 :x 6 7 8 9]" (str ttt-spec/out))
+      (should-contain ":current-screen :play" (str ttt-spec/out))))
+
   (it "set screen to mode-selection if not resumed"
     (with-redefs [game-logs/get-last-in-progress-game (stub :last {:return nil})
-                  resume/handle-resume (stub :handle-resume {:return nil})]
+                  resume/handle-resume (stub :handle-resume {:return (assoc ttt-spec/resume-state
+                                                                       :current-screen :mode-selection)})]
       (.serve ttt-spec/route (assoc ttt-spec/connData "request" ttt-spec/resume-post-2) ttt-spec/out)
-      (should-contain (str "Set-Cookie: state=" ttt-spec/mode-state)
-                      (str ttt-spec/out)))))
+      (should-contain ":current-screen :mode-selection" (str ttt-spec/out)))))
