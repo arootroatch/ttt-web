@@ -1,9 +1,9 @@
 (ns html-spec.replay-spec
-  (:require [speclj.core :refer :all]
+  (:require [html.play :as play]
+            [speclj.core :refer :all]
             [tic-tac-toe.game-logs.game-logs :as game-logs]
             [tic-tac-toe.game-logs.sql :as sql]
             [tic-tac-toe.game_logs.edn-logs :as edn]
-            [html.play :as play]
             [ttt :refer :all]))
 
 (def replay-state-3x3 {:game-id         2,
@@ -37,7 +37,7 @@
                     :replay?         true})
 
 (def replay-post-sql (str "POST /ttt HTTP/1.1\r\nContent-Length: 8\r\nCookie: state="
-                         (assoc ttt-spec/mode-state :human? false :player :o) "\r\n\r\nreplay=2"))
+                          (assoc ttt-spec/mode-state :human? false :player :o) "\r\n\r\nreplay=2"))
 
 (def next-move-post-sql (str "POST /ttt HTTP/1.1\r\nContent-Length: 8\r\nCookie: state="
                              replay-state-3x3 "\r\n\r\nnext-move=0"))
@@ -60,7 +60,7 @@
                   game-logs/get-game-log (stub :game-log {:return (assoc replay-state-3x3
                                                                     :human? false
                                                                     :player :o
-                                                                    :game-state "O wins!") })])
+                                                                    :game-state "O wins!")})])
 
   (before (.reset ttt-spec/out))
 
@@ -112,7 +112,6 @@
   (it "updates state with each move played"
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" win-post-sql) ttt-spec/out)
     (should-contain ":game-state \"O wins!\"" (str ttt-spec/out)))
-
 
   (it "next move button does nothing if game is over"
     (.serve ttt-spec/route (assoc ttt-spec/connData "request" game-over-post-sql) ttt-spec/out)
