@@ -3,9 +3,11 @@
             [next.jdbc :as jdbc]
             [speclj.core :refer :all]
             [tic-tac-toe.game-logs.game-logs :as game-logs]
+            [tic-tac-toe.game-logs.sql :as sql]
             [tic-tac-toe.gui.resume-selection :as resume]
             [html.mode-selection :refer :all]
-            [ttt-spec :as ttt-spec]))
+            [ttt-spec :as ttt-spec]
+            [test-data :refer :all]))
 
 (def db-test {:dbtype "postgres" :dbname "ttt-test"})
 (def ds-test (jdbc/get-datasource db-test))
@@ -49,9 +51,11 @@
 
   (context "replay selection"
     (it "gets sql game ids of replayable games"
-      (should= [2 3 7 9 10 11 12 13 16 17 18 19 20 21 22 25 28] (get-game-ids {:db :sql :ds ds-test})))
+      (run! #(sql/log-game-state ds-test %) test-data)
+      (should= [2 3 7 9 10 11 12 13 16 17 18 19 20 21 22 25 28] (get-game-ids {:db :sql :ds ds-test}))
+      (jdbc/execute! ds-test ["TRUNCATE TABLE games;"]))
 
-    (it "gets end game ids of replayable games"
+    (it "gets edn game ids of replayable games"
       (should= [1 2 3 4 5 6 7 8 9 13 14 15 16 18 19 20 21 22] (get-game-ids {:db :edn :path edn-logs-path-test})))
 
     (it "asks for replay selection"
