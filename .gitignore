@@ -2,3 +2,5 @@
 .idea
 .nrepl-port
 .clj-kondo/.cache
+.security-session-start-sha
+.security-turn-files
