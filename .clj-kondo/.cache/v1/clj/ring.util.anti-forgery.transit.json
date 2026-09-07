@@ -1,0 +1,1 @@
+["^ ","~$anti-forgery-field",["^ ","~:row",6,"~:col",1,"~:fixed-arities",["~#set",[0]],"~:name","^0","~:ns","~$ring.util.anti-forgery","~:top-ns","^7","~:arities",["^ ","~i0",["^ ","~:ret","~:string"]],"~:type","~:fn"],"~:filename","ring/util/anti_forgery.clj"]

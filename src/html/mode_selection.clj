@@ -3,7 +3,7 @@
             [next.jdbc :as jdbc]
             [tic-tac-toe.game-logs.sql :as sql]
             [tic-tac-toe.game_logs.edn-logs :as edn]
-            [tic-tac-toe.tui.print-utils :as print-utils]
+            [tic-tac-toe.prompts :as prompts]
             [render-html :refer :all]))
 
 (def edn-logs-path "src/game_logs/game-logs.edn")
@@ -37,10 +37,10 @@
 (defn mode-form []
   [:form {:method "POST" :action "/ttt"}
    [:select {:name "mode"}
-    [:option {:value 1} (second print-utils/mode-prompt)]
-    [:option {:value 2} (nth print-utils/mode-prompt 2)]
-    [:option {:value 3} (nth print-utils/mode-prompt 3)]
-    [:option {:value 4} (last print-utils/mode-prompt)]]
+    [:option {:value 1} (second prompts/mode-prompt)]
+    [:option {:value 2} (nth prompts/mode-prompt 2)]
+    [:option {:value 3} (nth prompts/mode-prompt 3)]
+    [:option {:value 4} (last prompts/mode-prompt)]]
    [:input {:type "submit"}]])
 
 (defmethod render-html :mode-selection [{:keys [db]}]
@@ -50,5 +50,5 @@
                  [:p "Choose a game to replay"]
                  (replay-form db)
                  [:p "OR"]
-                 [:p (first print-utils/mode-prompt)]
+                 [:p (first prompts/mode-prompt)]
                  (mode-form)]])))

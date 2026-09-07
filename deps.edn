@@ -1,18 +1,10 @@
-{:deps    {
-           io.github.arootroatch/tic-tac-toe-clojure {:git/sha "5fe836f058a839a5607c702c3e2b226df73a4c45"}
-           server/MyHttpServer                       {:local/root "/Users/AlexRoot-Roatch/current-projects/MyHttpServer.jar"}
+{:paths ["src"]
+ :deps    {io.github.arootroatch/tic-tac-toe-clojure {:git/sha "aca3800daee42948ed5d30edaff05638326b91b2"}
+           ;server/MyHttpServer                       {:local/root "/Users/AlexRoot-Roatch/current-projects/MyHttpServer.jar"}
            hiccup/hiccup                             {:mvn/version "2.0.0-RC3"}
            com.github.seancorfield/next.jdbc         {:mvn/version "1.3.939"}
-           org.postgresql/postgresql                 {:mvn/version "42.7.3"}
-           }
- :aliases {
-           :test {
-                  :extra-paths ["spec"]
-                  :extra-deps  {
-                                speclj/speclj     {:mvn/version "3.4.8"}
-                                clj-http/clj-http {:mvn/version "3.10.1"}
-                                }
-                  }
-           :spec {:main-opts ["-m" "speclj.main" "-c"]}
-           }
- }
+           org.postgresql/postgresql                 {:mvn/version "42.7.3"}}
+ :aliases {:test {:extra-paths ["spec"]
+                  :extra-deps  {speclj/speclj     {:mvn/version "3.4.8"}
+                                clj-http/clj-http {:mvn/version "3.10.1"}}}
+           :spec {:main-opts ["-m" "speclj.main" "-c"]}}}
