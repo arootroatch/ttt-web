@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Deps: quil:4.3.1323">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/quil/quil/4.3.1323/quil-4.3.1323.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

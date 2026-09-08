@@ -4,7 +4,7 @@
   PRs very welcome! - Peter Taoussanis"
   (:refer-clojure :exclude [defonce])
   (:require
-   [clj-kondo.hooks-api :as hooks]))
+    [clj-kondo.hooks-api :as hooks]))
 
 (defn defalias
   [{:keys [node]}]
@@ -14,13 +14,13 @@
     {:node
      (with-meta
        (hooks/list-node
-        [(hooks/token-node 'def)
-         (hooks/token-node sym)
-         (if body
-           (hooks/list-node
+         [(hooks/token-node 'def)
+          (hooks/token-node sym)
+          (if body
+            (hooks/list-node
             ;; use :body in the def to avoid unused import/private var warnings
-            [(hooks/token-node 'or) body src])
-           src)])
+              [(hooks/token-node 'or) body src])
+            src)])
        (meta src))}))
 
 (defn defaliases
@@ -28,27 +28,27 @@
   (let [alias-nodes (rest (:children node))]
     {:node
      (hooks/list-node
-      (into
-       [(hooks/token-node 'do)]
-       (map
-        (fn alias->defalias [alias-node]
-          (cond
-            (hooks/token-node? alias-node)
-            (hooks/list-node
-             [(hooks/token-node 'taoensso.encore/defalias)
-              alias-node])
+       (into
+         [(hooks/token-node 'do)]
+         (map
+           (fn alias->defalias [alias-node]
+             (cond
+               (hooks/token-node? alias-node)
+               (hooks/list-node
+                 [(hooks/token-node 'taoensso.encore/defalias)
+                  alias-node])
 
-            (hooks/map-node? alias-node)
-            (let [{:keys [src alias attrs body]} (hooks/sexpr alias-node)
+               (hooks/map-node? alias-node)
+               (let [{:keys [src alias attrs body]} (hooks/sexpr alias-node)
                   ;; workaround as can't seem to (get) using a token-node
                   ;; and there's no update-keys (yet) in sci apparently
-                  [& {:as node-as-map}] (:children alias-node)
-                  {:keys [attrs body]} (zipmap (map hooks/sexpr (keys node-as-map))
-                                               (vals node-as-map))]
-              (hooks/list-node
-               [(hooks/token-node 'taoensso.encore/defalias)
-                (or alias src) (hooks/token-node src) attrs body])))))
-       alias-nodes))}))
+                     [& {:as node-as-map}] (:children alias-node)
+                     {:keys [attrs body]} (zipmap (map hooks/sexpr (keys node-as-map))
+                                                  (vals node-as-map))]
+                 (hooks/list-node
+                   [(hooks/token-node 'taoensso.encore/defalias)
+                    (or alias src) (hooks/token-node src) attrs body])))))
+         alias-nodes))}))
 
 (defn defn-cached
   [{:keys [node]}]
