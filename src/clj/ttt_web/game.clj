@@ -1,23 +1,23 @@
 (ns ttt-web.game
   (:require [tic-tac-toe.board-options :as board-options]
-  [tic-tac-toe.bot-moves]
-  [tic-tac-toe.eval-board :as eval-board]
-  [tic-tac-toe.player :as player]))
+            [tic-tac-toe.bot-moves]
+            [tic-tac-toe.eval-board :as eval-board]
+            [tic-tac-toe.player :as player]))
 
 (defn playable? [{:keys [game-state board]} n]
   (and (= :in-progress game-state) (number? (nth board n))))
 
 (defn ai-turn? [{:keys [mode player game-state]}]
   (and (= :in-progress game-state)
-    (or (= 4 mode)
-      (and (= 2 mode) (= player :o))
-      (and (= 3 mode) (= player :x)))))
+       (or (= 4 mode)
+           (and (= 2 mode) (= player :o))
+           (and (= 3 mode) (= player :x)))))
 
 (defn ->new-state [{:keys [player] :as state} new-board]
   (assoc state
-    :board new-board
-    :player (player/switch-player player)
-    :game-state (eval-board/score new-board)))
+         :board new-board
+         :player (player/switch-player player)
+         :game-state (eval-board/score new-board)))
 
 (defn play [{:keys [board player] :as state} n]
   (cond-> state

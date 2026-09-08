@@ -12,7 +12,7 @@
 
 (defn new-board-response [new-state]
   (-> (http/html-ok (view/board-wrapper new-state))
-    (assoc :session new-state)))
+      (assoc :session new-state)))
 
 (defn move [{:keys [params session]}]
   (let [n (parse-long (:n params))
