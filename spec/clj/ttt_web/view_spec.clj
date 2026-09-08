@@ -1,7 +1,7 @@
 (ns ttt-web.view-spec
   (:require [speclj.core :refer [context describe it should=]]
-          [tic-tac-toe.board-options :as board-options]
-          [ttt-web.view :as sut]))
+            [tic-tac-toe.board-options :as board-options]
+            [ttt-web.view :as sut]))
 
 (def base-btn-options {:class "board-square" :hx-swap "outerHTML" :hx-target "#board-wrapper"})
 
@@ -32,17 +32,17 @@
   (context "board"
     (it "renders a square per cell"
       (should= (into [:div {:id "board" :class "three-grid"}]
-                 (map #(sut/square (in-progress board-options/initial-3x3-board) %) (range 9)))
+                     (map #(sut/square (in-progress board-options/initial-3x3-board) %) (range 9)))
                (sut/board (in-progress board-options/initial-3x3-board))))
 
     (it "renders a 16 square board"
       (should= (into [:div {:id "board" :class "four-grid"}]
-                 (map #(sut/square (in-progress board-options/initial-4x4-board) %) (range 16)))
+                     (map #(sut/square (in-progress board-options/initial-4x4-board) %) (range 16)))
                (sut/board (in-progress board-options/initial-4x4-board))))
 
     (it "renders proper token per cell"
       (should= (into [:div {:id "board" :class "three-grid"}]
-                 (map #(sut/square (in-progress [:x :o :x :o :x :o :x :o :x]) %) (range 9)))
+                     (map #(sut/square (in-progress [:x :o :x :o :x :o :x :o :x]) %) (range 9)))
                (sut/board (in-progress [:x :o :x :o :x :o :x :o :x])))))
 
   (context "heading"

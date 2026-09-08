@@ -1,9 +1,7 @@
 (ns ttt-web.handlers-spec
-  (:require [c3kit.apron.corec :as ccc]
-          [speclj.core :refer [context  describe  it  should= should-contain should-not-contain]]
-          [tic-tac-toe.board-options :as board-options]
-          [ttt-web.game :as game]
-    [ttt-web.handlers :as sut]))
+  (:require [speclj.core :refer [context  describe  it  should-contain  should-not-contain  should=]]
+            [ttt-web.game :as game]
+            [ttt-web.handlers :as sut]))
 
 (describe "handlers"
   (context "move"

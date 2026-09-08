@@ -1,10 +1,10 @@
 (ns ttt-web.handlers
   (:require [hiccup.page :as page]
-    [hiccup2.core :as hiccup]
-    [ring.util.response  :as  response]
-  [ttt-web.game :as game]
-  [ttt-web.http :as http]
-  [ttt-web.view :as view]))
+            [hiccup2.core :as hiccup]
+            [ring.util.response  :as  response]
+            [ttt-web.game :as game]
+            [ttt-web.http :as http]
+            [ttt-web.view :as view]))
 
 (defn- maybe-invalid-move [n board]
   (when-not (and n (< -1 n (count board)))
@@ -32,4 +32,4 @@
 
 (defn restart [_]
   (-> (http/html-ok (view/board-wrapper game/new-game))
-    (assoc :session game/new-game)))
+      (assoc :session game/new-game)))

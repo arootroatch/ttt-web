@@ -1,7 +1,7 @@
 (ns ttt-web.game
   (:require [tic-tac-toe.board-options :as board-options]
-  [tic-tac-toe.eval-board :as eval-board]
-  [tic-tac-toe.player :as player]))
+            [tic-tac-toe.eval-board :as eval-board]
+            [tic-tac-toe.player :as player]))
 
 (defn playable? [{:keys [game-state board]} n]
   (and (= :in-progress game-state) (number? (nth board n))))
