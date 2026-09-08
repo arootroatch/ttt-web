@@ -65,4 +65,16 @@
                                              :game-state "X wins!"}})]
         (should= 200 (:status response))
         (should= game/new-game (:session response))
-        (should-contain "X&apos;s turn!" (:body response))))))
+        (should-contain "X&apos;s turn!" (:body response)))))
+
+  (context "ai-move"
+    (it "plays the ai's move and returns the updated board"
+      (let [response (sut/ai-move {:session {:board          [:x 2 3 4 5 6 7 8 9]
+                                             :player         :o
+                                             :game-state     :in-progress
+                                             :mode           2
+                                             :first-ai-level 3}})]
+        (should= 200 (:status response))
+        (should= [:x 2 3 4 :o 6 7 8 9] (get-in response [:session :board]))
+        (should= :x (get-in response [:session :player]))
+        (should-contain ">O<" (:body response))))))

@@ -16,6 +16,7 @@
   (it-routes :get "/" handlers/home)
   (it-routes :post "/move/0" handlers/move)
   (it-routes :post "/restart" handlers/restart)
+  (it-routes :post "/ai-move" handlers/ai-move)
 
   (it "responds 404 for unknown route"
     (should= 404 (:status (sut/routes (mock/request :get "/nope")))))

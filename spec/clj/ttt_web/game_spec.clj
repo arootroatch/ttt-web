@@ -1,5 +1,5 @@
 (ns ttt-web.game-spec
-  (:require [speclj.core :refer [describe it should=]]
+  (:require [speclj.core :refer [describe it should= focus-it]]
             [ttt-web.game :as sut]))
 
 (describe "Game"
@@ -19,6 +19,22 @@
 
   (it "starts a new game in progress"
     (should= :in-progress (:game-state sut/new-game)))
+
+  (it "starts a new game against the ai"
+    (should= 2 (:mode sut/new-game))
+    (should= 3 (:first-ai-level sut/new-game))
+    (should= :web (:ui sut/new-game)))
+
+  (it "plays the ai move and hands the turn back"
+    (let [result (sut/ai-move {:board          [:x 2 3 4 5 6 7 8 9]
+                               :player         :o
+                               :game-state     :in-progress
+                               :mode           2
+                               :first-ai-level 3
+                               :ui             :web})]
+      (should= [:x 2 3 4 :o 6 7 8 9] (:board result))
+      (should= :x (:player result))
+      (should= :in-progress (:game-state result))))
 
   (it "ignores moves after the game is over"
     (let [state {:board [:x :x :x :o :o 6 7 8 9] :player :o :game-state "X wins!"}]

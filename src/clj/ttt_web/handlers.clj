@@ -10,13 +10,16 @@
   (when-not (and n (< -1 n (count board)))
     (response/bad-request "Invalid move")))
 
+(defn new-board-response [new-state]
+  (-> (http/html-ok (view/board-wrapper new-state))
+    (assoc :session new-state)))
+
 (defn move [{:keys [params session]}]
   (let [n (parse-long (:n params))
         {:keys [board]} session
         new-state (delay (game/play session n))]
     (or (maybe-invalid-move n board)
-        (-> (http/html-ok (view/board-wrapper @new-state))
-            (assoc :session @new-state)))))
+        (new-board-response @new-state))))
 
 (defn home [{:keys [session]}]
   (let [session (if (empty? session) game/new-game session)]
@@ -31,5 +34,8 @@
         (assoc :session session))))
 
 (defn restart [_]
-  (-> (http/html-ok (view/board-wrapper game/new-game))
-      (assoc :session game/new-game)))
+  (new-board-response game/new-game))
+
+(defn ai-move [{:keys [session]}]
+  (let [new-state (game/ai-move session)]
+    (new-board-response new-state)))

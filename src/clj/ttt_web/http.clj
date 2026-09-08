@@ -7,5 +7,4 @@
       (response/content-type "text/html")))
 
 (defn html-page-ok [& content]
-  (-> (response/response (str (hiccup/html content)))
-      (response/content-type "text/html")))
+  (html-ok content))

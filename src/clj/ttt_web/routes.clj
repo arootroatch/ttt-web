@@ -8,6 +8,7 @@
   (GET "/" [] handlers/home)
   (POST "/move/:n" [] handlers/move)
   (POST "/restart" [] handlers/restart)
+  (POST "/ai-move" [] handlers/ai-move)
   (route/resources "/")
   (route/not-found "Not Found"))
 

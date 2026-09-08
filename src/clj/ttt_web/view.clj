@@ -20,8 +20,14 @@
      (str (-> player name upper-case) "'s turn!")
      game-state)])
 
+(defn board-wrapper-options [state]
+  (cond-> {:id "board-wrapper"}
+          (game/ai-turn? state) (merge {:hx-post "/ai-move"
+                                        :hx-trigger "load delay:300ms"
+                                        :hx-swap "outerHTML"})))
+
 (defn board-wrapper [state]
-  [:div {:id "board-wrapper"}
+  [:div (board-wrapper-options state)
    (heading state)
    (board state)
    (when (not= :in-progress (:game-state state))

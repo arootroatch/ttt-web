@@ -55,6 +55,33 @@
                (sut/heading {:player :o :game-state "X wins!"}))))
 
   (context "board-wrapper"
+    (it "asks for the ai move when it is the ai's turn"
+      (should= {:id         "board-wrapper"
+                :hx-post    "/ai-move"
+                :hx-trigger "load delay:300ms"
+                :hx-swap    "outerHTML"}
+               (second (sut/board-wrapper {:board          [:x 2 3 4 5 6 7 8 9]
+                                           :player         :o
+                                           :game-state     :in-progress
+                                           :mode           2
+                                           :first-ai-level 3}))))
+
+    (it "does not ask for an ai move on the human's turn"
+      (should= {:id "board-wrapper"}
+               (second (sut/board-wrapper {:board          [1 2 3 4 5 6 7 8 9]
+                                           :player         :x
+                                           :game-state     :in-progress
+                                           :mode           2
+                                           :first-ai-level 3}))))
+
+    (it "does not ask for an ai move once the game is over"
+      (should= {:id "board-wrapper"}
+               (second (sut/board-wrapper {:board          [:x :x :x :o :o 6 7 8 9]
+                                           :player         :o
+                                           :game-state     "X wins!"
+                                           :mode           2
+                                           :first-ai-level 3}))))
+
     (it "offers a restart when the game is over"
       (should= [:button {:id        "restart"
                          :hx-post   "/restart"
