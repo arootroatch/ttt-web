@@ -1,9 +1,11 @@
 (ns ttt-web.handlers-spec
-  (:require [speclj.core :refer [context  describe  it  should-contain  should-not-contain  should=]]
+  (:require [ring.middleware.anti-forgery :as af]
+            [speclj.core :refer [context  redefs-around describe  it  should-contain  should-not-contain  should=]]
             [ttt-web.game :as game]
             [ttt-web.handlers :as sut]))
 
 (describe "handlers"
+
   (context "move"
     (it "rejects a move outside the board"
       (should= 400 (:status (sut/move {:params  {:n "99"}
@@ -31,6 +33,8 @@
                                                   :game-state :in-progress}})))))
 
   (context "home"
+    (redefs-around [af/*anti-forgery-token* "test-token"])
+
     (it "starts a new game"
       (should= game/new-game
                (:session (sut/home {}))))
@@ -73,8 +77,19 @@
                                              :player         :o
                                              :game-state     :in-progress
                                              :mode           2
-                                             :first-ai-level 3}})]
+                                             :first-ai-level 3
+                                             :ui :web}})]
         (should= 200 (:status response))
         (should= [:x 2 3 4 :o 6 7 8 9] (get-in response [:session :board]))
         (should= :x (get-in response [:session :player]))
-        (should-contain ">O<" (:body response))))))
+        (should-contain ">O<" (:body response))))
+
+    (it "plays the ai move only when it's the ai's turn"
+      (let [response (sut/ai-move {:session {:board          [1 2 3 4 5 6 7 8 9]
+                                             :player         :x
+                                             :game-state     :in-progress
+                                             :mode           2
+                                             :first-ai-level 3
+                                             :ui :web}})]
+        (should= 400 (:status response))
+        (should= "It's the human's turn!" (:body response))))))

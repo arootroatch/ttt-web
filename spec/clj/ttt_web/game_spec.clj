@@ -1,5 +1,5 @@
 (ns ttt-web.game-spec
-  (:require [speclj.core :refer [describe it should= focus-it]]
+  (:require [speclj.core :refer [describe it  should=]]
             [ttt-web.game :as sut]))
 
 (describe "Game"
