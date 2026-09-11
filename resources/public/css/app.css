@@ -18,14 +18,14 @@ h1 {
   margin-bottom: 4rem;
 }
 
-.selection-btn, .select-board-btn, #restart {
+.selection-btn, .select-board-btn, #restart, #new-game {
   display: block;
   padding: 1rem;
   border-radius: 10px;
   font-size: 1.2rem;
 }
 
-#restart {
+#restart, #new-game {
   width: 100%;
   margin: 2rem auto;
 }
@@ -35,7 +35,7 @@ h1 {
   margin: 1rem auto;
 }
 
-.selection-btn, .select-board-btn, .board-square, #restart {
+.selection-btn, .select-board-btn, .board-square, #restart, #new-game {
   color: whitesmoke;
   background-color: rgba(151, 2, 159, 0.785);
   cursor: pointer;

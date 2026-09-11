@@ -1,4 +1,5 @@
-(ns ttt-web.view (:require [clojure.string :refer [upper-case]] [ttt-web.game :as game]))
+(ns ttt-web.view (:require [clojure.string :refer [upper-case]] [tic-tac-toe.prompts :as prompts]
+                           [ttt-web.game :as game]))
 
 (defn square [{:keys [board] :as state} n]
   (let [token (nth board n)]
@@ -35,5 +36,44 @@
                :hx-post   "/restart"
                :hx-swap   "outerHTML"
                :hx-target "#board-wrapper"}
-      "Restart"])])
+      "Restart"])
+   (when (not= :in-progress (:game-state state))
+     [:button {:id           "new-game"
+               :hx-get       "/mode"
+               :hx-swap      "outerHTML"
+               :hx-target    "#board-wrapper"
+               :hx-push-url  "true"}
+      "New Game"])])
 
+(defn selection-button [state-attr number label]
+  [:button {:id (str state-attr "-" number)
+            :class "selection-btn"
+            :hx-post (str "/" state-attr "/" number)
+            :hx-target "#screen"
+            :hx-swap "outerHTML"}
+   label])
+
+(defn mode-selection []
+  (into [:div {:id "screen" :class "screen"}
+         [:h2 (first prompts/mode-prompt)]]
+        (for [n [1 2 3 4]]
+          (selection-button "mode" n (nth prompts/mode-prompt n)))))
+
+(defn board-selection []
+  (into [:div {:id "screen" :class "screen"}
+         [:h2 (first prompts/board-prompt)]]
+        (for [n [1 2]]
+          (selection-button "board" n (nth prompts/board-prompt n)))))
+
+(defn level-prompt [{:keys [mode] :as state}]
+  (nth prompts/level-prompt
+       (case (game/next-level-key state)
+         :second-ai-level 1
+         :first-ai-level (if (= 4 mode) 0 2)
+         2)))
+
+(defn level-selection [state]
+  (into [:div {:id "screen" :class "screen"}
+         [:h2 (level-prompt state)]]
+        (for [[level label] [[1 3] [2 4] [3 6]]]
+          (selection-button "level" level (nth prompts/level-prompt label)))))

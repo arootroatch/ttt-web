@@ -1,5 +1,6 @@
 (ns ttt-web.game-spec
   (:require [speclj.core :refer [describe it  should=]]
+            [tic-tac-toe.board-options :as board-options]
             [ttt-web.game :as sut]))
 
 (describe "Game"
@@ -18,12 +19,13 @@
                                                :game-state :in-progress} 2))))
 
   (it "starts a new game in progress"
-    (should= :in-progress (:game-state sut/new-game)))
+    (should= :in-progress (:game-state (sut/new-game board-options/initial-3x3-board 1))))
 
   (it "starts a new game against the ai"
-    (should= 2 (:mode sut/new-game))
-    (should= 3 (:first-ai-level sut/new-game))
-    (should= :web (:ui sut/new-game)))
+    (let [result (sut/new-game board-options/initial-3x3-board 2 3)]
+      (should= 2 (:mode result))
+      (should= 3 (:first-ai-level result))
+      (should= :web (:ui result))))
 
   (it "plays the ai move and hands the turn back"
     (let [result (sut/ai-move {:board          [:x 2 3 4 5 6 7 8 9]

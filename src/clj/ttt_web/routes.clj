@@ -1,6 +1,5 @@
 (ns ttt-web.routes
-  (:require [c3kit.apron.corec :as ccc]
-            [compojure.core :refer [GET POST defroutes]]
+  (:require [compojure.core :refer [GET POST defroutes]]
             [compojure.route :as route]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.session :refer [wrap-session]]
@@ -8,6 +7,13 @@
 
 (defroutes routes
   (GET "/" [] handlers/home)
+  (GET "/mode" [] handlers/mode-screen)
+  (GET "/board" [] handlers/board-screen)
+  (GET "/level" [] handlers/level-screen)
+  (GET "/play" [] handlers/play-screen)
+  (POST "/mode/:n" [] handlers/select-mode)
+  (POST "/board/:n" [] handlers/select-board)
+  (POST "/level/:n" [] handlers/select-level)
   (POST "/move/:n" [] handlers/move)
   (POST "/restart" [] handlers/restart)
   (POST "/ai-move" [] handlers/ai-move)
